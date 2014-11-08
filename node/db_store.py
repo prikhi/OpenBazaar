@@ -1,6 +1,7 @@
 import logging
-from pysqlcipher import dbapi2 as sqlite
 from threading import Lock
+
+from pysqlcipher import dbapi2 as sqlite
 
 
 class Obdb(object):
@@ -46,8 +47,7 @@ class Obdb(object):
 
     @staticmethod
     def _dictFactory(cursor, row):
-        """ A factory that allows sqlite to return a dictionary instead of a tuple
-        """
+        """ Allow sqlite to return a dictionary instead of a tuple."""
         d = {}
         for idx, col in enumerate(cursor.description):
             if row[idx] is None:
@@ -63,8 +63,8 @@ class Obdb(object):
         return unicode(value)
 
     def getOrCreate(self, table, where_dict, data_dict=False):
-        """ This method attempts to grab the record first. If it fails to find it,
-        it will create it.
+        """ This method attempts to grab the record first. If it fails to find
+        it, it will create it.
         @param table: The table to search to
         @param where_dict: A dictionary with the WHERE/SET clauses
         @param data_dict: A dictionary with the SET clauses
@@ -150,8 +150,9 @@ class Obdb(object):
         if lastrowid:
             return lastrowid
 
-    def selectEntries(self, table, where_dict=None, operator="AND", order_field="id",
-                      order="ASC", limit=None, limit_offset=None, select_fields="*"):
+    def selectEntries(self, table, where_dict=None, operator="AND",
+                      order_field="id", order="ASC", limit=None,
+                      limit_offset=None, select_fields="*"):
         """
         A wrapper for the SQL SELECT operation. It will always return all the
         attributes for the selected rows.

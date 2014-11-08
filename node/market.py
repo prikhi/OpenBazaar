@@ -7,20 +7,20 @@ import gnupg
 import hashlib
 import json
 import logging
-from PIL import Image, ImageOps
 import random
 from StringIO import StringIO
 from threading import Thread
 import traceback
 
 from bitcoin.main import privkey_to_pubkey
+from PIL import Image, ImageOps
 import tornado
 
-import constants
-from crypto_util import Cryptor
-from data_uri import DataURI
-from orders import Orders
-from protocol import proto_page, query_page
+from node import constants
+from node.crypto_util import Cryptor
+from node.data_uri import DataURI
+from node.orders import Orders
+from node.protocol import proto_page, query_page
 
 
 class Market(object):
@@ -131,15 +131,19 @@ class Market(object):
 
     @staticmethod
     def get_contract_id():
-        """Choice of number of new contract to prevent guessing the sequence of contract' id.
-           Other members not to be able to extract order volume from peers by viewing the latest order id.
+        """Choice of number of new contract to prevent guessing the sequence of
+        contract' id.
+
+        Other members not to be able to extract order volume from peers by
+        viewing the latest order id.
 
         """
         return random.randint(0, 1000000)
 
     @staticmethod
     def linebreak_signing_data(data):
-        """For signing with gpg, the width of the text is formatted 52 characters long"""
+        """For signing with gpg, the width of the text is formatted 52
+        characters long"""
         json_string = json.dumps(data, indent=0)
         seg_len = 52
         out_text = "\n".join(
@@ -203,7 +207,8 @@ class Market(object):
         self.settings = self.get_settings()
 
         seller = msg['Seller']
-        seller['seller_PGP'] = self.gpg.export_keys(self.settings['PGPPubkeyFingerprint'])
+        seller['seller_PGP'] = self.gpg.export_keys(
+            self.settings['PGPPubkeyFingerprint'])
         seller['seller_BTC_uncompressed_pubkey'] = self.settings['btc_pubkey']
         seller['seller_GUID'] = self.settings['guid']
         seller['seller_Bitmessage'] = self.settings['bitmessage']
@@ -360,9 +365,11 @@ class Market(object):
 
             # Push keyword index out again
             contract = listing.get('Contract')
-            keywords = contract.get('item_keywords') if contract is not None else []
+            keywords = (contract.get('item_keywords') if contract is not None
+                        else [])
 
-            t3 = Thread(target=self.update_keywords_on_network, args=(listing.get('key'), keywords,))
+            t3 = Thread(target=self.update_keywords_on_network,
+                        args=(listing.get('key'), keywords,))
             t3.start()
 
         # Updating the DHT index of your store's listings
@@ -591,7 +598,8 @@ class Market(object):
                 'key': contract.get('key', ''),
                 'id': contract.get('id', ''),
                 'item_images': contract_field.get('item_images'),
-                'signed_contract_body': contract.get('signed_contract_body', ''),
+                'signed_contract_body': contract.get('signed_contract_body',
+                                                     ''),
                 'contract_body': contract_body,
                 'unit_price': item_price,
                 'deleted': contract.get('deleted'),
@@ -613,7 +621,8 @@ class Market(object):
         self.db.updateEntries(
             "contracts",
             {"deleted": "0"},
-            {"market_id": self.transport.market_id.replace("'", "''"), "id": contract_id}
+            {"market_id": self.transport.market_id.replace("'", "''"),
+             "id": contract_id}
         )
 
     def save_settings(self, msg):
@@ -798,13 +807,16 @@ class Market(object):
         for key, value in self.transport.nick_mapping.iteritems():
             self.log.info(
                 "'%s' -> '%s' (%s)",
-                key, value[1].encode("hex") if value[1] is not None else value[1],
+                key,
+                value[1].encode("hex") if value[1] is not None else value[1],
                 value[0].encode("hex") if value[0] is not None else value[0])
         self.log.info("##################################")
 
-    def release_funds_to_merchant(self, buyer_order_id, tx, script, signatures, guid):
+    def release_funds_to_merchant(self, buyer_order_id, tx, script, signatures,
+                                  guid):
         """Send TX to merchant"""
-        self.log.debug("Release funds to merchant: %s %s %s %s", buyer_order_id, tx, signatures, guid)
+        self.log.debug("Release funds to merchant: %s %s %s %s",
+                       buyer_order_id, tx, signatures, guid)
         self.transport.send(
             {
                 'type': 'release_funds_tx',

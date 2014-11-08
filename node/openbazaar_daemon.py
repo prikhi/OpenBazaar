@@ -13,15 +13,16 @@ from zmq.eventloop import ioloop
 from threading import Thread
 from twisted.internet import reactor
 
-from db_store import Obdb
-from market import Market
-from transport import CryptoTransportLayer
-import upnp
-from util import open_default_webbrowser, is_mac
-from ws import WebSocketHandler
+from node import upnp
+from node.db_store import Obdb
+from node.market import Market
+from node.transport import CryptoTransportLayer
+from node.util import open_default_webbrowser, is_mac
+from node.ws import WebSocketHandler
+
 
 if is_mac():
-    from util import osx_check_dyld_library_path
+    from node.util import osx_check_dyld_library_path
     osx_check_dyld_library_path()
 
 ioloop.install()
@@ -148,7 +149,8 @@ class OpenBazaarContext(object):
                 'disable_open_browser': False,
                 'disable_sqlite_crypt': False,
                 'log_level': 30,
-                # CRITICAL=50 ERROR=40 WARNING=30 DEBUG=10 DEBUGV=9 DATADUMP=5 NOTSET=0
+                # CRITICAL=50 ERROR=40 WARNING=30 DEBUG=10 DEBUGV=9 DATADUMP=5
+                # NOTSET=0
                 'http_ip': '127.0.0.1',
                 'http_port': 0,
                 'bm_user': None,
@@ -326,7 +328,8 @@ def create_logger(ob_ctx):
 def log_openbazaar_start(log, ob_ctx):
     log.info("Started OpenBazaar Web App at http://%s:%s" %
              (ob_ctx.http_ip, ob_ctx.http_port))
-    print "Started OpenBazaar Web App at http://%s:%s" % (ob_ctx.http_ip, ob_ctx.http_port)
+    print "Started OpenBazaar Web App at http://%s:%s" % (ob_ctx.http_ip,
+                                                          ob_ctx.http_port)
 
 
 def attempt_browser_open(ob_ctx):

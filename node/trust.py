@@ -1,7 +1,8 @@
-import obelisk
 import logging
+
 import bitcoin
 from twisted.internet import reactor
+import obelisk
 
 _log = logging.getLogger('trust')
 

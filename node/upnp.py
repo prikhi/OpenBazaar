@@ -167,8 +167,9 @@ class PortMapper(object):
         if self.UPNP_DEVICE_AVAILABLE:
             mappings = self.get_mapping_list()
             for m in mappings:
-                if m.description.startswith(PortMapper.OPEN_BAZAAR_DESCRIPTION) \
-                   and m.port == port:
+                is_open_bazaar_description = m.description.startswith(
+                    PortMapper.OPEN_BAZAAR_DESCRIPTION)
+                if is_open_bazaar_description and m.port == port:
                     self.debug('delete_port_mapping -> Found:', str(m))
                     try:
                         self.delete_port_mapping(m.port, m.protocol)

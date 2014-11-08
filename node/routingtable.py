@@ -1,9 +1,7 @@
 import logging
 import time
 
-import constants
-import guid
-import kbucket
+from node import constants, guid, kbucket
 
 
 class RoutingTable(object):
@@ -495,7 +493,7 @@ class OptimizedTreeRoutingTable(TreeRoutingTable):
                     # The bucket is full; see if it can be split (by checking
                     # if its range includes the host node's id)
                     if self.buckets[bucketIndex].keyInRange(
-                       self.parent_node_id):
+                            self.parent_node_id):
                         self.splitBucket(bucketIndex)
                         # Retry the insertion attempt
                         self.addContact(contact)
@@ -545,4 +543,5 @@ class OptimizedTreeRoutingTable(TreeRoutingTable):
             else:
                 self.buckets[bucket_index].addContact(cached)
         finally:
-            self.log.datadump('Contacts: %s', self.buckets[bucket_index].contacts)
+            self.log.datadump(
+                'Contacts: %s', self.buckets[bucket_index].contacts)
