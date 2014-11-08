@@ -34,7 +34,6 @@ class Obdb(object):
             timeout=10
         )
 
-
     # pylint: disable=no-self-argument
     # pylint: disable=not-callable
     def _managedmethod(func):
@@ -65,9 +64,7 @@ class Obdb(object):
 
     @staticmethod
     def _dictFactory(cursor, row):
-        """
-        A factory that allows sqlite to return a dictionary instead of a tuple.
-        """
+        """Allow sqlite to return a dictionary instead of a tuple."""
         d = {}
         for idx, col in enumerate(cursor.description):
             if row[idx] is None:
@@ -172,8 +169,9 @@ class Obdb(object):
             return lastrowid
 
     @_managedmethod
-    def selectEntries(self, table, where_dict=None, operator="AND", order_field="id",
-                      order="ASC", limit=None, limit_offset=None, select_fields="*"):
+    def selectEntries(self, table, where_dict=None, operator="AND",
+                      order_field="id", order="ASC", limit=None,
+                      limit_offset=None, select_fields="*"):
         """
         A wrapper for the SQL SELECT operation. It will always return
         all the attributes for the selected rows.

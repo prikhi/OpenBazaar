@@ -349,7 +349,7 @@ class TreeRoutingTable(RoutingTable):
         self.buckets[bucket_index].lastAccessed = timestamp
 
     def addContact(self, contact):
-        #FIXME why not have implementation?
+        # FIXME why not have implementation?
         raise NotImplementedError
 
     def kbucketIndex(self, node_id):
@@ -506,7 +506,7 @@ class OptimizedTreeRoutingTable(TreeRoutingTable):
                     # The bucket is full; see if it can be split (by checking
                     # if its range includes the host node's id)
                     if self.buckets[bucketIndex].keyInRange(
-                       self.parent_node_id):
+                            self.parent_node_id):
                         self.splitBucket(bucketIndex)
                         # Retry the insertion attempt
                         self.addContact(contact)
@@ -556,4 +556,5 @@ class OptimizedTreeRoutingTable(TreeRoutingTable):
             else:
                 self.buckets[bucket_index].addContact(cached)
         finally:
-            self.log.datadump('Contacts: %s', self.buckets[bucket_index].contacts)
+            self.log.datadump(
+                'Contacts: %s', self.buckets[bucket_index].contacts)

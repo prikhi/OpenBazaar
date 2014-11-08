@@ -1,7 +1,7 @@
+import json
+import os
 import tarfile
 import time
-import os
-import json
 
 
 class BackupTool(object):

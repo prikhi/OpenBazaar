@@ -1,5 +1,6 @@
 import logging
 
+
 def create_custom_log_levels():
     logging.addLevelName(5, "DATADUMP")
 
@@ -8,7 +9,6 @@ def create_custom_log_levels():
             self._log(5, message, args, **kwargs)
 
     logging.Logger.datadump = datadump
-
 
     logging.addLevelName(9, "DEBUGV")
 

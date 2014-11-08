@@ -4,6 +4,7 @@ import bitcoin
 import obelisk
 from twisted.internet import reactor
 
+
 _log = logging.getLogger('trust')
 
 TESTNET = False
@@ -36,6 +37,7 @@ def get_unspent(addr, callback):
         callback(total)
 
     reactor.callFromThread(get_history)
+
 
 def get_global(guid, callback):
     get_unspent(burnaddr_from_guid(guid), callback)

@@ -1,21 +1,17 @@
-import threading
+import json
 import logging
+import random
 import subprocess
-import pycountry
+import threading
+
+from bitcoin import (apply_multisignatures, eligius_pushtx, mk_multisig_script,
+                     mktx, multisign, scriptaddr)
 import gnupg
 import obelisk
-import json
-import random
-from bitcoin import (
-    apply_multisignatures,
-    eligius_pushtx,
-    mk_multisig_script,
-    mktx,
-    multisign,
-    scriptaddr
-)
+import pycountry
 import tornado.websocket
 from twisted.internet import reactor
+
 from node import protocol, trust
 from node.backuptool import BackupTool, Backup, BackupJSONEncoder
 
@@ -816,8 +812,7 @@ class ProtocolHandler(object):
                            Backup.get_backups(BackupTool.get_backup_path())]
                 self.send_to_client(None, {'type': 'on_get_backups_response',
                                            'result': 'success',
-                                           'backups': backups
-                                           })
+                                           'backups': backups})
             except Exception:
                 self.send_to_client(None, {'type': 'on_get_backups_response',
                                            'result': 'failure'})
@@ -995,12 +990,8 @@ class ProtocolHandler(object):
         self.log.info("Add peer: %s", peer)
 
         response = {'type': 'peer',
-                    'pubkey': peer.pub
-                    if peer.pub
-                    else 'unknown',
-                    'guid': peer.guid
-                    if peer.guid
-                    else '',
+                    'pubkey': peer.pub if peer.pub else 'unknown',
+                    'guid': peer.guid if peer.guid else '',
                     'uri': peer.address}
         self.send_to_client(None, response)
 

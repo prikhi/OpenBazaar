@@ -20,6 +20,7 @@ from node.transport import CryptoTransportLayer
 from node.util import open_default_webbrowser, is_mac
 from node.ws import WebSocketHandler
 
+
 if is_mac():
     from node.util import osx_check_dyld_library_path
     osx_check_dyld_library_path()
@@ -148,7 +149,8 @@ class OpenBazaarContext(object):
                 'disable_open_browser': False,
                 'disable_sqlite_crypt': False,
                 'log_level': 30,
-                # CRITICAL=50 ERROR=40 WARNING=30 DEBUG=10 DEBUGV=9 DATADUMP=5 NOTSET=0
+                # CRITICAL=50 ERROR=40 WARNING=30 DEBUG=10 DEBUGV=9 DATADUMP=5
+                # NOTSET=0
                 'http_ip': '127.0.0.1',
                 'http_port': 0,
                 'bm_user': None,
@@ -254,12 +256,16 @@ class MarketApplication(tornado.web.Application):
 
             result = result_tcp_p2p_mapping and result_udp_p2p_mapping
             if not result:
-                print "Warning: UPnP was not setup correctly. ",
-                print "Ports could not be automatically mapped."
-                print "If you only see two or three stores, here are some tips:"
-                print "1. If you are using VPN, configure port forwarding or disable your VPN temporarily"
-                print "2. Configure your router to forward traffic from port",
-                print "%s for both TCP and UDP to your local port %s" % (p2p_port, p2p_port)
+                print '\n'.join([
+                    "Warning: UPnP was not setup correctly. Ports could not "
+                    "be automatically mapped.",
+                    "If you only see two or three stores, here are some tips:",
+                    "1. If you are using VPN, configure port forwarding or "
+                    "disable your VPN temporarily",
+                    "2. Configure your router to forward traffic from port"
+                    "%s for both TCP and UDP to your local port %s"
+                    % (p2p_port, p2p_port)
+                ])
 
         return result
 
@@ -327,7 +333,8 @@ def create_logger(ob_ctx):
 def log_openbazaar_start(log, ob_ctx):
     log.info("Started OpenBazaar Web App at http://%s:%s" %
              (ob_ctx.http_ip, ob_ctx.http_port))
-    print "Started OpenBazaar Web App at http://%s:%s" % (ob_ctx.http_ip, ob_ctx.http_port)
+    print "Started OpenBazaar Web App at http://%s:%s" % (ob_ctx.http_ip,
+                                                          ob_ctx.http_port)
 
 
 def attempt_browser_open(ob_ctx):

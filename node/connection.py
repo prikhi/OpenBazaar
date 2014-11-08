@@ -177,7 +177,8 @@ class CryptoPeerConnection(GUIDMixin, PeerConnection):
         sig_data = json.dumps(data).encode('hex')
         signature = self.sign(sig_data).encode('hex')
 
-        self.log.datadump('Sending to peer: %s %s', self.address, pformat(data))
+        self.log.datadump(
+            'Sending to peer: %s %s', self.address, pformat(data))
 
         try:
             # Encrypt signature and data
@@ -234,7 +235,8 @@ class PeerListener(GUIDMixin):
             try:
                 # we are in local test mode so bind that socket on the
                 # specified IP
-                self.log.info("PeerListener.socket.bind('%s') LOOPBACK", self.uri)
+                self.log.info(
+                    "PeerListener.socket.bind('%s') LOOPBACK", self.uri)
                 self.socket.bind(self.uri)
             except ZMQError as e:
                 error_message = "".join([
@@ -253,11 +255,13 @@ class PeerListener(GUIDMixin):
                         "\n\n"])
                 raise Exception(error_message)
         elif '[' in self.ip:
-            self.log.info("PeerListener.socket.bind('tcp://[*]:%s') IPV6", self.port)
+            self.log.info(
+                "PeerListener.socket.bind('tcp://[*]:%s') IPV6", self.port)
             self.socket.ipv6 = True
             self.socket.bind('tcp://[*]:%s' % self.port)
         else:
-            self.log.info("PeerListener.socket.bind('tcp://*:%s') IPV4", self.port)
+            self.log.info(
+                "PeerListener.socket.bind('tcp://*:%s') IPV4", self.port)
             self.socket.bind('tcp://*:%s' % self.port)
 
         self.stream = zmqstream.ZMQStream(
@@ -333,7 +337,9 @@ class CryptoPeerListener(PeerListener):
                 signature = message['sig'].decode('hex')
                 signed_data = message['data']
 
-                if CryptoPeerListener.validate_signature(signature, signed_data):
+                has_valid_signature = CryptoPeerListener.validate_signature(
+                    signature, signed_data)
+                if has_valid_signature:
                     message = signed_data.decode('hex')
                     message = json.loads(message)
 
@@ -352,7 +358,7 @@ class CryptoPeerListener(PeerListener):
             message = json.loads(serialized)
 
         self.log.debugv('Received message of type "%s"',
-                       message.get('type', 'unknown'))
+                        message.get('type', 'unknown'))
         self._data_cb(message)
 
     @staticmethod
